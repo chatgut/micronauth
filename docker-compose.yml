@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  auth:
+    build:
+      context: .
+    container_name: micronauth
+    depends_on:
+      - dbAuth
+    environment:
+      DB_URL: jdbc:mysql://dbAuth:3306/dbAuth
+      DB_USER: developer
+      DB_PASS: password
+    ports:
+      - "8000:8000"
+  dbAuth:
+    image: 'mysql:latest'
+    container_name: dbAuth
+    ports:
+      - "3306:3306"
+    volumes:
+      - dbData:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: dbAuth
+      MYSQL_USER: developer
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_ROOT_PASSWORD: password
+volumes:
+  dbData:

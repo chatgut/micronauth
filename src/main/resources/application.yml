@@ -31,7 +31,7 @@ micronaut:
 
 datasources:
   default:
-    jdbc-url: jdbc:mysql://localhost:3306/demo
+    jdbc-url: jdbc:mysql://dbAuth:3306/dbAuth
     dialect: MYSQL
     driverClassName: com.mysql.cj.jdbc.Driver
     username: developer

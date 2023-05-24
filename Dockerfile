@@ -1,5 +1,10 @@
-FROM eclipse-temurin:20-jre-alpine
-COPY target/*.jar app.jar
+FROM maven:3.9.0-eclipse-temurin-19-alpine AS build
+COPY src /app/src/
+COPY pom.xml /app/
 WORKDIR /app
-EXPOSE 8080
-ENTRYPOINT ["java","-jar","/app.jar"]
+RUN mvn clean package
+
+FROM eclipse-temurin:19-jre-alpine
+COPY --from=build /app/target/micronauth.jar /app/app.jar
+EXPOSE 8000
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]

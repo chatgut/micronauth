@@ -2,7 +2,6 @@ package com.example.service;
 
 import com.example.entity.User;
 import com.example.repository.UserRepository;
-import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import javax.transaction.Transactional;
@@ -10,12 +9,14 @@ import javax.transaction.Transactional;
 @Singleton
 public class UserService {
 
-    @Inject
     UserRepository userRepository;
 
-    @Inject
     PasswordEncoderService passwordEncoderService;
 
+    public UserService(UserRepository userRepository, PasswordEncoderService passwordEncoderService) {
+        this.userRepository = userRepository;
+        this.passwordEncoderService = passwordEncoderService;
+    }
 
     @Transactional
     public User registerUser(User user) {

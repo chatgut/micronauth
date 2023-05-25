@@ -34,5 +34,11 @@ https://github.com/chatgut/micronauth/pkgs/container/micronauth
 }
 ```
 
+## RequestAuthentication
+
+```
+-issuer: "micronauth"
+jwksUri: http://micronauth:8080/auth/keys
+```
 
 

@@ -57,7 +57,7 @@ public class RefreshTokenProvider implements RefreshTokenPersistence {
                 if (token.getRevoked()) {
                     emitter.error(new OauthErrorResponseException(INVALID_GRANT, "refresh token revoked", null));
                 } else {
-                    emitter.next(Authentication.build(token.getUserId(), Map.of("iss", "http://localhost:8000/auth")));
+                    emitter.next(Authentication.build(token.getUserId(), Map.of("iss", "micronauth")));
                     emitter.complete();
                 }
             } else {

@@ -6,5 +6,5 @@ RUN mvn clean package
 
 FROM eclipse-temurin:19-jre-alpine
 COPY --from=build /app/target/micronauth.jar /app/app.jar
-EXPOSE 8000
+EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]

@@ -35,7 +35,7 @@ public class AuthenticationProviderUserPassword implements AuthenticationProvide
             if (isValid) {
                 emitter.next(AuthenticationResponse.success(username, Map.of(
                         "sub", repository.findByUsername(username).getUserId(),
-                        "iss", "http://localhost:8000/auth")));
+                        "iss", "micronauth")));
                 emitter.complete();
             } else {
                 emitter.error(AuthenticationResponse.exception());

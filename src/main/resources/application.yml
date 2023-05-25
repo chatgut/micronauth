@@ -31,11 +31,11 @@ micronaut:
 
 datasources:
   default:
-    jdbc-url: jdbc:mysql://dbAuth:3306/dbAuth
+    jdbc-url: jdbc:mysql://${DB_SERVICE:dbAuth}:3306/${DB_TABLE:dbAuth}
     dialect: MYSQL
     driverClassName: com.mysql.cj.jdbc.Driver
-    username: developer
-    password: password
+    username: ${DB_USER:developer}
+    password: ${DB_PASS:password}
 
 jpa:
   default:

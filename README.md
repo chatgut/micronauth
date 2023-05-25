@@ -1,14 +1,38 @@
-## Micronaut 3.9.2 Documentation
+## Micronaut Auth Microservice
+Auth service for creating user credentials and distributing JWT's 
 
-- [User Guide](https://docs.micronaut.io/3.9.2/guide/index.html)
-- [API Reference](https://docs.micronaut.io/3.9.2/api/index.html)
-- [Configuration Reference](https://docs.micronaut.io/3.9.2/guide/configurationreference.html)
-- [Micronaut Guides](https://guides.micronaut.io/index.html)
+Application runs on port 8080
 
----
+## Image
+https://github.com/chatgut/micronauth/pkgs/container/micronauth
 
-- [Micronaut Maven Plugin documentation](https://micronaut-projects.github.io/micronaut-maven-plugin/latest/)
+## Endpoints
+<B>Create account:</B>
 
-## Feature http-client documentation
+`POST /auth/register`
 
-- [Micronaut HTTP Client documentation](https://docs.micronaut.io/latest/guide/index.html#httpClient)
+<B>Login:</B>
+
+`POST /auth`
+
+<B>JSON example create account and create token:</B>
+```
+{
+  "username":"user1",
+  "password": "password"
+}
+```
+<B>Refresh token:</B>
+
+`POST /auth/refresh`
+
+<B>JSON example refresh token:</B>
+```
+{
+  "refresh_token": "eyJhbGciOiJIUzI1NiJ9.MzUyNzczZjItZjA0Ny00ZDQ5LTlmNmQtZGQ4NGM4N2YyYTRh.YxA9Q2w_ca0iZQwxA6XG6Ns1sgtc1NKf0tVHJXr_nG0",
+  "grant_type":"refresh_token"
+}
+```
+
+
+

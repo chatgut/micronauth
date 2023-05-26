@@ -1,10 +1,9 @@
-FROM maven:3.9.0-eclipse-temurin-19-alpine AS build
+FROM maven:3.9.0-eclipse-temurin-17-alpine AS build
+WORKDIR /app
 COPY src /app/src/
 COPY pom.xml /app/
-WORKDIR /app
-RUN mvn clean package
-
-FROM eclipse-temurin:19-jre-alpine
+RUN ./mvnw package -Dpackaging=docker-native -Pgraalvm
+FROM adoptopenjdk/openjdk17:alpine-jre
 COPY --from=build /app/target/micronauth.jar /app/app.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+CMD ["java", "-jar", "/app/app.jar"]

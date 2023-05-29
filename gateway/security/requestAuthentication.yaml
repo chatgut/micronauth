@@ -1,0 +1,16 @@
+apiVersion: security.istio.io/v1beta1
+kind: RequestAuthentication
+metadata:
+  name: req-authn-for-all
+  namespace: istio-system
+spec:
+  selector:
+    matchLabels:
+      istio: ingressgateway
+  jwtRules:
+    - issuer: "micronauth"
+      jwksUri: "http://micronauth.default.svc.cluster.local:8080/auth/keys"
+      forwardOriginalToken: true
+      outputClaimToHeaders:
+        - header: "userID"
+          claim: "sub"

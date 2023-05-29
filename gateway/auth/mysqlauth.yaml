@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysqlauth
+spec:
+  ports:
+    - port: 3306
+  selector:
+    app: mysqlauth
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysqlauth
+spec:
+  selector:
+    matchLabels:
+      app: mysqlauth
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysqlauth
+    spec:
+      containers:
+        - image: mysql:latest
+          name: mysqlauth
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: password
+            - name: MYSQL_DATABASE
+              value: dbAuth
+            - name: MYSQL_USER
+              value: developer
+            - name: MYSQL_PASSWORD
+              value: password
+            - name: MYSQL_ROOT_HOST
+              value: '%'
+          ports:
+            - containerPort: 3306
+              name: mysqlauth
+          volumeMounts:
+            - name: auth-persistent-storage
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: auth-persistent-storage
+          persistentVolumeClaim:
+            claimName: auth-pv-claim

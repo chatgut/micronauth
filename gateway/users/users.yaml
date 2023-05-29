@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: users
+  labels:
+    app: users
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: users
+  template:
+    metadata:
+      name: users
+      labels:
+        app: users
+    spec:
+      containers:
+        - name: users
+          image: ghcr.io/chatgut/userservice:1.0
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: DB_URL
+              value: jdbc:mysql://mysqlusers:3306/users
+            - name: DB_USER
+              value: developer
+            - name: DB_PASSWORD
+              value: password
+          ports:
+            - containerPort: 8002
+              name: users
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: users
+  namespace: default
+  labels:
+    app: users
+    service: users
+spec:
+  selector:
+    app: users
+  ports:
+    - name: http
+      port: 8002 # The port that the service is running on in the cluster
+      targetPort: 8002 # The port exposed by the pod, containerport
+  type: LoadBalancer

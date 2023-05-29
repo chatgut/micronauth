@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysqlusers
+spec:
+  ports:
+    - port: 3306
+  selector:
+    app: mysqlusers
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysqlusers
+spec:
+  selector:
+    matchLabels:
+      app: mysqlusers
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysqlusers
+    spec:
+      containers:
+        - image: mysql:latest
+          name: mysqlusers
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: password
+            - name: MYSQL_DATABASE
+              value: users
+            - name: MYSQL_USER
+              value: developer
+            - name: MYSQL_PASSWORD
+              value: password
+            - name: MYSQL_ROOT_HOST
+              value: '%'
+          ports:
+            - containerPort: 3306
+              name: mysqlusers
+          volumeMounts:
+            - name: users-persistent-storage
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: users-persistent-storage
+          persistentVolumeClaim:
+            claimName: users-pv-claim

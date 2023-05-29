@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chatgut
+  labels:
+    app: chatgut
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chatgut
+  template:
+    metadata:
+      name: chatgut
+      labels:
+        app: chatgut
+    spec:
+      containers:
+        - name: chatgut
+          image: chatgut:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+              name: chatgut
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: chatgut
+  namespace: default
+  labels:
+    app: chatgut
+    service: chatgut
+spec:
+  selector:
+    app: chatgut
+  ports:
+    - name: http
+      port: 8080 # The port that the service is running on in the cluster
+      targetPort: 8080 # The port exposed by the pod, containerport

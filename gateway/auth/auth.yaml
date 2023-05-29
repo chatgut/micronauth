@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: micronauth
+  labels:
+    app: micronauth
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: micronauth
+  template:
+    metadata:
+      name: micronauth
+      labels:
+        app: micronauth
+    spec:
+      containers:
+        - name: micronauth
+          image: micronauth:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: DB_URL
+              value: jdbc:mysql://mysqlauth:3306/dbAuth
+            - name: DB_USER
+              value: developer
+            - name: DB_PASS
+              value: password
+          ports:
+            - containerPort: 8080
+              name: micronauth
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: micronauth
+  namespace: default
+  labels:
+    app: micronauth
+    service: micronauth
+spec:
+  selector:
+    app: micronauth
+  ports:
+    - name: http
+      port: 8080 # The port that the service is running on in the cluster
+      targetPort: 8080 # The port exposed by the pod, containerport

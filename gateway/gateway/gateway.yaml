@@ -1,0 +1,58 @@
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: gateway
+  namespace: default
+  labels:
+    app: gateway
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+    - port:
+        number: 80
+        name: http
+        protocol: HTTP
+      hosts:
+        - "*"
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: virtualservice
+  namespace: default
+spec:
+  hosts:
+    - "*"
+  gateways:
+    - gateway
+  http:
+    - name: micronauth
+      match:
+        - uri:
+            prefix: /auth
+      route:
+        - destination:
+            host: micronauth.default.svc.cluster.local
+            port:
+              number: 8080
+    - name: users
+      match:
+        - uri:
+            prefix: /users
+      route:
+        - destination:
+            host: users.default.svc.cluster.local
+            port:
+              number: 8002
+    - name: chatgut
+      match:
+      - uri:
+          prefix: /chat
+      rewrite:
+        uri: /
+      route:
+        - destination:
+            host: chatgut.default.svc.cluster.local
+            port:
+              number: 8080

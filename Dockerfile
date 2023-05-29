@@ -1,10 +1,19 @@
-FROM maven:3.9.0-eclipse-temurin-19-alpine AS build
-COPY src /app/src/
-COPY pom.xml /app/
-WORKDIR /app
-RUN mvn clean package
+FROM container-registry.oracle.com/graalvm/native-image:latest as graalvm
 
-FROM eclipse-temurin:19-jre-alpine
-COPY --from=build /app/target/micronauth.jar /app/app.jar
+RUN microdnf -y install wget unzip zip findutils tar
+
+COPY . /app
+WORKDIR /app
+
+RUN \
+    curl -s "https://get.sdkman.io" | bash; \
+    source "$HOME/.sdkman/bin/sdkman-init.sh"; \
+    sdk install maven; \
+    mvn package -Pnative native:compile -DskipTests
+
+FROM container-registry.oracle.com/os/oraclelinux:9-slim
+
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+COPY --from=graalvm app/target/micronauth.jar /app/app.jar
+
+ENTRYPOINT ["/app/app.jar"]
